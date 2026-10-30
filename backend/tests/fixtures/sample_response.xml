@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<response>
+  <header>
+    <resultCode>000</resultCode>
+    <resultMsg>OK</resultMsg>
+  </header>
+  <body>
+    <items>
+      <item>
+        <aptNm>테스트아파트</aptNm>
+        <buildYear>2008</buildYear>
+        <cdealType> </cdealType>
+        <dealAmount>   185,000</dealAmount>
+        <dealDay>12</dealDay>
+        <dealMonth>3</dealMonth>
+        <dealYear>2025</dealYear>
+        <excluUseAr>84.97</excluUseAr>
+        <floor>10</floor>
+        <sggCd>11680</sggCd>
+        <umdNm>역삼동</umdNm>
+      </item>
+      <item>
+        <aptNm>테스트아파트</aptNm>
+        <buildYear>2008</buildYear>
+        <cdealType>O</cdealType>
+        <dealAmount>190,000</dealAmount>
+        <dealDay>15</dealDay>
+        <dealMonth>3</dealMonth>
+        <dealYear>2025</dealYear>
+        <excluUseAr>84.97</excluUseAr>
+        <floor>12</floor>
+        <sggCd>11680</sggCd>
+        <umdNm>역삼동</umdNm>
+      </item>
+      <item>
+        <aptNm>두번째단지</aptNm>
+        <buildYear>2015</buildYear>
+        <cdealType></cdealType>
+        <dealAmount>98,500</dealAmount>
+        <dealDay>20</dealDay>
+        <dealMonth>3</dealMonth>
+        <dealYear>2025</dealYear>
+        <excluUseAr>59.99</excluUseAr>
+        <floor>3</floor>
+        <sggCd>11680</sggCd>
+        <umdNm>개포동</umdNm>
+      </item>
+      <item>
+        <aptNm></aptNm>
+        <dealAmount>50,000</dealAmount>
+        <dealDay>1</dealDay>
+        <dealMonth>3</dealMonth>
+        <dealYear>2025</dealYear>
+        <excluUseAr>40.0</excluUseAr>
+        <umdNm>개포동</umdNm>
+      </item>
+    </items>
+    <numOfRows>1000</numOfRows>
+    <pageNo>1</pageNo>
+    <totalCount>4</totalCount>
+  </body>
+</response>
