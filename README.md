@@ -51,8 +51,9 @@ docker compose up -d --build
 docker compose exec backend python -m app.cli collect --start 202501 --end 202509
 docker compose exec backend python -m app.cli insight --months 6
 ```
-- API 문서: http://localhost:8000/docs
-- 대시보드: http://localhost:8501
+- 로컬의 8000/8501 포트와 겹치지 않도록 Docker는 18000/18501 포트를 씁니다.
+- API 문서: http://localhost:18000/docs
+- 대시보드: http://localhost:18501
 
 ### 2) 로컬 실행 (SQLite)
 ```bash
