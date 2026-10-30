@@ -67,6 +67,16 @@ uvicorn app.main:app --reload
 cd dashboard && pip install -r requirements.txt && streamlit run app.py
 ```
 
+### 3) 인증키 없이 실제 데이터 넣기 (CSV)
+1. [국토교통부 실거래가 공개시스템](https://rt.molit.go.kr) → 자료제공 → 조건별 자료제공
+2. 아파트 · 매매 · 서울특별시 · 원하는 기간을 고르고 **CSV**로 내려받기
+3. `backend/data/` 폴더에 넣고 실행
+```bash
+python -m app.cli import-csv data/*.csv
+python -m app.cli insight --months 6
+```
+해제(취소)된 거래는 자동으로 빠지고, 같은 파일을 다시 넣어도 중복되지 않습니다.
+
 > 💡 **API 키 승인 전에 화면부터 만들고 싶다면** `python -m app.cli seed-sample`로 가짜 데이터("샘플단지")를 넣을 수 있습니다. 실제 수집 전에는 DB 파일(`realestate.db`)을 지우고 시작하세요.
 
 ## CLI
@@ -76,6 +86,7 @@ cd dashboard && pip install -r requirements.txt && streamlit run app.py
 | `collect --start YYYYMM --end YYYYMM [--lawd 코드...]` | 실거래가 수집 (생략 시 서울 25개 구) |
 | `insight --months N [--lawd 코드...]` | 서울 전체 + 구별 인사이트 생성 |
 | `run --months N` | 최근 N개월 수집 + 인사이트 (cron 등 스케줄러용) |
+| `import-csv 파일...` | 국토부 공개시스템 CSV 가져오기 (인증키 불필요) |
 | `seed-sample` | UI 개발용 가짜 데이터 |
 
 ## 주요 API

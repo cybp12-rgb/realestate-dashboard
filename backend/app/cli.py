@@ -5,6 +5,7 @@
   python -m app.cli collect --start 202506 --end 202506 --lawd 11680 # 강남구만
   python -m app.cli insight --months 6                               # 서울 전체 + 25개 구 인사이트
   python -m app.cli run --months 12                                  # 수집+인사이트 한 번에 (스케줄러용)
+  python -m app.cli import-csv data/*.csv                            # 인증키 없이: 국토부 공개시스템 CSV 가져오기
   python -m app.cli seed-sample                                      # API 키 없이 UI 개발용 가짜 데이터
 """
 import argparse
@@ -12,11 +13,13 @@ import json
 import logging
 import random
 from datetime import date, timedelta
+from pathlib import Path
 
 from app.core.logging_config import setup_logging
 from app.core.regions import SEOUL_REGIONS
 from app.database import SessionLocal, init_db
 from app.services.cleaner import PYEONG_M2, CleanDeal
+from app.services.csv_importer import import_csv_files
 from app.services.insight_service import generate_insight
 from app.services.loader import ensure_regions, load_deals
 from app.services.pipeline import run_collect, run_full
@@ -71,6 +74,9 @@ def main() -> None:
     p = sub.add_parser("run", help="최근 N개월 수집 + 인사이트")
     p.add_argument("--months", type=int, default=12)
 
+    p = sub.add_parser("import-csv", help="국토부 실거래가 공개시스템 CSV 가져오기 (인증키 불필요)")
+    p.add_argument("files", nargs="+", help="CSV 파일 경로")
+
     sub.add_parser("seed-sample", help="가짜 샘플 데이터 적재 (UI 개발용)")
 
     args = parser.parse_args()
@@ -80,6 +86,8 @@ def main() -> None:
         elif args.cmd == "insight":
             codes = args.lawd or [None, *SEOUL_REGIONS]
             result = {"generated": sum(1 for c in codes if generate_insight(db, args.months, c))}
+        elif args.cmd == "import-csv":
+            result = import_csv_files(db, [Path(f) for f in args.files])
         elif args.cmd == "run":
             result = run_full(db, args.months)
         else:

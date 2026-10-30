@@ -93,3 +93,24 @@ def test_insight_with_mock_llm(db, monkeypatch):
     llm = LLMClient(client=httpx.Client(transport=httpx.MockTransport(handler)))
     ins = generate_insight(db, months=3, lawd_cd="11680", llm=llm)
     assert ins.source == "llm" and ins.summary_text == "- 테스트 인사이트" and ins.prompt_version == "v1"
+
+
+def test_import_molit_csv(db, tmp_path):
+    from app.services.csv_importer import import_csv_files
+
+    lines = [
+        "□ 본 서비스에서 제공하는 정보는 법적인 효력이 없으므로 참고용으로만 활용하시기 바랍니다.",
+        "□ 검색조건",
+        "",
+        '"NO","시군구","번지","본번","부번","단지명","전용면적(㎡)","계약년월","계약일","거래금액(만원)","동","층","매수자","매도자","건축년도","도로명","해제사유발생일","거래유형","중개사소재지","등기일자"',
+        '"1","서울특별시 강남구 개포동","12","0012","0000","개포테스트","84.99","202509","15","250,000","","10","개인","개인","2019","개포로 1","-","중개거래","서울 강남구","-"',
+        '"2","서울특별시 강남구 개포동","12","0012","0000","개포테스트","84.99","202509","20","255,000","","12","개인","개인","2019","개포로 1","20251001","중개거래","서울 강남구","-"',
+        '"3","서울특별시 마포구 아현동","1","0001","0000","아현테스트","59.9","202509","3","130,000","","5","개인","개인","2015","아현로 1","-","직거래","-","-"',
+        '"4","경기도 성남시분당구 정자동","1","0001","0000","분당테스트","84.9","202509","3","150,000","","5","개인","개인","2015","정자로 1","-","직거래","-","-"',
+    ]
+    f = tmp_path / "apt.csv"
+    f.write_bytes("\n".join(lines).encode("cp949"))
+    result = import_csv_files(db, [f])
+    # 서울 3행 중 해제 1건 제외 → 2건, 경기도는 건너뜀
+    assert result == {"files": 1, "rows": 3, "inserted_rows": 2}
+    assert import_csv_files(db, [f])["inserted_rows"] == 0  # 중복 없음
